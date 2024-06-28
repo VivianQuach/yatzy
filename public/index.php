@@ -2,28 +2,30 @@
 require_once('_config.php');
 ?>
 
-<div id="die1">--</div>
-<button id="roll">Roll</button>
+<html>
+  <head>
+    <script type="text/javascript" src="/assets/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
 
-<script>
-const die1 = document.getElementById("die1");
-const roll = document.getElementById("roll");
-roll.onclick = function(e) {
+    <div id="die1">--</div>
+    <button id="roll">Roll</button>
 
-  const xmlhttp = new XMLHttpRequest();
+    <script>
+      const die1 = document.getElementById("die1");
+      const roll = document.getElementById("roll");
+      roll.onclick = async function() {
+        let answer = $.ajax({
+          type: "GET",
+          url: "api.php?action=roll"
+        }).then(function(data) {
+          die1.innerHTML = data.value;
+        });
+      };
+    </script>
 
-  xmlhttp.onreadystatechange = function() {
-    if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-      if (xmlhttp.status == 200) {
-        die1.innerHTML = xmlhttp.responseText;
-      }
-    }
-  };
-
-  xmlhttp.open("GET", "/api.php?action=roll", true);
-  xmlhttp.send();
-}
-</script>
+  </body>
+</html>
 
 
 
