@@ -1,23 +1,30 @@
 <?php
 require_once('_config.php');
+?>
 
-use yatzy\app\models\Dice;
-use yatzy\app\models\YatzyGame;
-use yatzy\app\models\YatzyEngine;
+<div id="output">--</div>
+<button id="version">Version</button>
+<button id="roll-die">Roll Die</button>
 
-$d = new Dice();
+<script>
+const output = document.getElementById("output");
+const version = document.getElementById("version");
+const rollDie = document.getElementById("roll-die");
 
-for ($i=1; $i<=5; $i++) {
-  echo "ROLL {$i}: {$d->roll()}<br>";
+version.onclick = function(e) {
+  output.innerHTML = "Look up version clicked";
 }
 
-$game = new YatzyGame();
-$game->roll_dice();
-echo "Initial Dice Roll: " . implode(", ", $game->get_dice()) . "<br>";
+rollDie.onclick = function(e) {
+  fetch('roll_die.php')
+    .then(response => response.json())
+    .then(data => {
+      output.innerHTML = "Rolled: " + data.roll;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+</script>
 
-$score_box = 'ones'; 
-$game->update_score($score_box);
 
-echo "Score for '$score_box': " . $game->get_scores()[$score_box] . "<br>";
-echo "Overall Score: " . $game->get_score() . "<br>";
-echo "Bonus: " . $game->get_bonus() . "<br>";
